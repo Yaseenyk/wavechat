@@ -1,0 +1,10 @@
+body {
+  font-family: 'Lato', sans-serif;
+  background-image: url(https://firebasestorage.googleapis.com/v0/b/wavechat-daf87.appspot.com/o/5370420.jpg?alt=media&token=195b0d3e-b956-4b7e-be1b-95fc3d41fb26);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+code {
+  font-family: 'Open Sans', sans-serif;
+}

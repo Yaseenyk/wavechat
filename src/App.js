@@ -22,16 +22,17 @@ const App = () => {
         <Routes>
           <Route
             path="/"
-            element={token ? <Homepage /> : <Navigate to="/signin" />}
+            element={<Homepage />}
           />
           <Route
             path="/signin"
-            element={token ? <Navigate to="/" /> : <Signin />}
+            element={<Signin />}
           />
           <Route
             path="/signup"
-            element={token ? <Navigate to="/" /> : <Signup />}
+            element={<Signup />}
           />
+          {/* token ? <Navigate to="/" /> :  */}
         </Routes>
       </div>
     </BrowserRouter>

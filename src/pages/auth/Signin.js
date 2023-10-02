@@ -49,6 +49,9 @@ const Signin = () => {
       console.error("Error signing in:", error);
     }
   };
+  const handleSignin = ()=>{
+    navigate('/signup')
+  }
   return (
     <div className={styles["signin-container"]}>
       <div className={styles["leftContainer"]}>
@@ -97,7 +100,7 @@ const Signin = () => {
         </div>
         <div className={styles["Dont-Sign-up"]}>
           <span>Dont Have a Account</span>
-          <span className={styles['Signup-forgot']}> Sign in?</span>
+          <span className={styles['Signup-forgot']} onClick={handleSignin}> Sign up?</span>
         </div>
       </div>
     </div>

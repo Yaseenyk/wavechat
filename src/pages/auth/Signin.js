@@ -11,8 +11,10 @@ import Facebook from "../../assets/facebook.png";
 import Gmail from "../../assets/gmail.png";
 import emailImg from "../../assets/emailImg.png";
 import passwordImg from "../../assets/passwordImg.png";
+import LoadingSpinner from "../../helpers/LoadingSpinner/LoadingSpinner";
 const Signin = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const auth = getAuth();
   const [token, setToken] = useState();
   const [inputData, setInputData] = useState({
@@ -32,19 +34,18 @@ const Signin = () => {
 
   const hanldeInputSubmit = async () => {
     try {
+      setLoading(true)
       const userCredential = await signInWithEmailAndPassword(
         auth,
         inputData.email,
         inputData.password
       );
       const user = userCredential.user;
-      console.log("User signed in:", user, user.accessToken);
-      if (user.accessToken) {
-        Cookies.set("token", user.accessToken, { expires: 1 });
-        navigate("/");
-      } else {
-        navigate("/signin");
+      if(user){
+        setLoading(false);
+        navigate('/')
       }
+      
     } catch (error) {
       console.error("Error signing in:", error);
     }
@@ -88,8 +89,12 @@ const Signin = () => {
           <input type="checkbox"/>
           <label>Remember Me</label>
           </div>
-          <button className={styles["inputBtn"]} onClick={hanldeInputSubmit}>
-            Sign In
+          <button
+            className={styles["inputBtn"]}
+            onClick={hanldeInputSubmit}
+            disabled={loading}
+          >
+            {loading ? <LoadingSpinner loading={loading} /> : "Signup"}
           </button>
         </div>
         <div className={styles["or-block"]}>-------------------or-------------------</div>

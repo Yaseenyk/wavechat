@@ -1,0 +1,125 @@
+.sidebar-main {
+}
+.main-container {
+  height: 75vh;
+  width: 20vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.navbar-container {
+  width: 20vw;
+  display: flex;
+  flex-direction: row;
+  height: 5vh;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  padding-left: 10px;
+  padding-right: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+.navbar-image {
+  /* border: 1px solid; */
+  width: 5vw;
+  height: 5vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.navbar-name {
+  display: flex;
+  /* border: 1px solid; */
+  width: 11vw;
+  justify-content: center;
+  align-items: center;
+  height: 5vh;
+  font-family: "Mooli", sans-serif;
+  font-size: 16px;
+  font-weight: 900;
+}
+.navbar-btn {
+  border: none;
+  background-color: black;
+  color: white;
+  width: 80px;
+  height: 35px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: "Quicksand", sans-serif;
+  font-weight: 900;
+  cursor: pointer;
+}
+.input-search {
+  /* border: 1px solid; */
+  width: 21vw;
+  height: 4vh;
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+}
+.search-block {
+  width: 100%;
+  font-family: "Mooli", sans-serif;
+  border: none;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+}
+.navbar-imagDiv {
+  width: 100%;
+    height: fit-content;
+    border-radius: 50%;
+}
+.users-div {
+  /* border: 1px solid; */
+  display: flex;
+  flex-direction: column;
+  width: 20vw;
+  height: 65vh;
+  overflow-y: auto;
+  max-height: 65vh;
+  padding: 10px;
+  cursor: pointer;
+}
+.users-list {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 10vh;
+  flex-shrink: 0;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px,
+    rgb(209, 213, 219) 0px 0px 0px 1px inset;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+.main-user {
+}
+.user-image {
+    /* border: 1px solid; */
+    width: 4vw;
+    height: 10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+.user-name {
+}
+.user-message {
+}
+.user-full-div{
+    height: 10vh;
+    width: 15vw;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-around;
+}
+.navbar-profile{
+  width: 3vh;
+    border-radius: 50%;
+}

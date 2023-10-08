@@ -5,6 +5,8 @@ import ChatDisplay from "../chatdisplay/ChatDisplay";
 import { ChatContext } from "../../context/ChatContext";
 import { v4 as uuid } from 'uuid';
 import { AuthContext } from "../../context/AuthContext";
+import styles from './ChatView.module.css';
+import SendChat from '../../assets/SendChat.png'
 const Chatbox = () => {
   const[text,setText]=useState('');
   const [messages, setMessages] = useState([]);
@@ -45,13 +47,16 @@ const Chatbox = () => {
   };
 
   return (
-    <div>
+    <div className={styles['main-chatbox-container']}>
+      <div className={styles['chatbox-container']}>
       {messages.map((m) => (
         <ChatDisplay message={m} key={m.id}/>
       ))}
-
+      </div>
+      <div className={styles['input-block']}>
       <input type="text" onChange={(e)=>setText(e.target.value)} value={text}/>
-      <button onClick={handleSendData}>Send</button>
+      <button onClick={handleSendData}><img src={SendChat}/></button>
+      </div>
     </div>
   );
 };

@@ -9,18 +9,25 @@
     border-radius: 30px;
 }
 .sidebar-container{
-    border: 1px solid;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 80vh;
     width: 30vw;
+    background-color: #A491E7;
+    border-bottom-left-radius: 30px;
+    border-top-left-radius: 30px;
 }
 .Main-Container{
-    border: 1px solid;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 80vh;
-    width: 70vw;
+    height: 78vh;
+    width: 40vw;
+    padding: 10px;
+}
+.Just-For-Fun{
+    height: 100%;
+    border: 1px solid blue;
+    width: 30vw;
 }

@@ -131,7 +131,7 @@ const Sidebar = () => {
               <img src={user.photoURL} className={styles["navbar-imagDiv"]} />
             </div>
             <div className={styles["user-full-div"]}>
-              <div className={styles["user-name"]}>{user.name}</div>
+            <div className={styles["user-name"]}>{user.name.toUpperCase()}</div>
               <div className={styles["user-message"]}>Last Message</div>
             </div>
           </div>

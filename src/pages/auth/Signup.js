@@ -13,6 +13,7 @@ import Facebook from "../../assets/facebook.png";
 import Gmail from "../../assets/gmail.png";
 import emailImg from "../../assets/emailImg.png";
 import passwordImg from "../../assets/passwordImg.png";
+import AddImgHere from "../../assets/AddImgHere.png";
 import { db, storage } from "../../config/firebase";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
@@ -164,12 +165,15 @@ const Signup = () => {
           </div>
           <label>Add Profile Photo</label>
           <div className={styles["inputs-div-here"]}>
-            <img src={passwordImg} className={styles["ImgDIv"]} />
+            <img src={AddImgHere} className={styles["ImgDIv"]} />
+            <label  htmlFor="Signup" style={{cursor:'pointer'}}>Add Your Image Here</label>
             <input
+            style={{display:'none'}}
               type="file"
               className={styles["inputFile"]}
               onChange={handleInputProfilePhoto} // Use handleInputProfilePhoto for file input
               accept="image/*"
+              id="Signup"
             />
           </div>
 

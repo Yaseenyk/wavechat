@@ -97,6 +97,7 @@ const Signin = () => {
             {loading ? <LoadingSpinner loading={loading} /> : "Signup"}
           </button>
         </div>
+        {/* <hr/> */}
         <div className={styles["or-block"]}>-------------------or-------------------</div>
         <div className={styles["Img-div"]}>
           <img src={Insta} className={styles["imgClick"]} />

@@ -1,10 +1,6 @@
-import React, { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import styles from "./signin.module.css";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  updateProfile,
-} from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/Logo.png";
 import LeftSide from "../../assets/SocialMedia.jpg";
@@ -13,12 +9,13 @@ import Facebook from "../../assets/facebook.png";
 import Gmail from "../../assets/gmail.png";
 import emailImg from "../../assets/emailImg.png";
 import passwordImg from "../../assets/passwordImg.png";
-import AddImgHere from "../../assets/AddImgHere.png";
-import { db, storage } from "../../config/firebase";
-import { collection, doc, setDoc } from "firebase/firestore";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import NameIcon from "../../assets/NameIcon.png";
 import LoadingSpinner from "../../helpers/LoadingSpinner/LoadingSpinner";
 const Signup = () => {
+  const inputRef = useRef();
+  const [showPass, setShowPass] = useState(false);
+  const [showConfirmPass, setshowConfirmPass] = useState(false);
+
   const [inputData, setInputData] = useState({
     name: "",
     email: "",
@@ -31,7 +28,6 @@ const Signup = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const auth = getAuth();
   const navigate = useNavigate();
-  // setLoading(true);
   const handleInputName = (e) => {
     const name = e.target.value;
     setInputData({ ...inputData, name });
@@ -64,62 +60,44 @@ const Signup = () => {
           inputData.email,
           inputData.password
         );
-
-        const storageRef = ref(storage, `${inputData.name}_profile`);
-        const uploadTask = uploadBytesResumable(storageRef, inputData.image);
-
-        uploadTask.on(
-          "state_changed",
-          null,
-          (error) => {
-            SetError(true);
-            setErrorMsg("Error uploading image.");
-          },
-          () => {
-            getDownloadURL(uploadTask.snapshot.ref).then(
-              async (downloadURL) => {
-                console.log(downloadURL);
-                await updateProfile(response.user, {
-                  displayName: inputData.name,
-                  photoURL: downloadURL,
-                });
-                await setDoc(doc(db, "users", response.user.uid), {
-                  uid: response.user.uid,
-                  name: inputData.name,
-                  email: inputData.email,
-                  photoURL: downloadURL,
-                });
-                await setDoc(doc(db, "userChats", response.user.uid), {});
-                setLoading(false);
-                navigate("/signin");
-              }
-            );
-          }
-        );
+        if (response.status === 200) {
+          navigate("/signin");
+        }
       } catch (err) {
-        console.log(err.message);
+        const { code, message } = err;
+        console.log(code, message);
+
+        if (code == "auth/email-already-in-use") {
+          setErrorMsg("You Have Already logged in go to signin page instead?");
+        }
         SetError(true);
-        setErrorMsg(err.message);
-        
-        // if(err.message == 'Firebase: Error (auth/email-already-in-use)'){
-        //   setErrorMsg('Email Already')
-        // }
       }
+    } else {
+      alert("Password Doesnt Matches");
     }
   };
-
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
   const handleSignup = () => {
     navigate("/signin");
   };
-
+  const toggleShowPassword = (e) => {
+    e.preventDefault();
+    setShowPass((prevState) => !prevState);
+  };
+  const toggleConfirmPassword = (e) => {
+    e.preventDefault();
+    setshowConfirmPass((prevState) => !prevState);
+  };
   return (
     <div className={styles["signup-container"]}>
       <div className={styles["leftContainer"]}>
-        <img src={LeftSide} className={styles["SigninImg"]} />
+        <img src={LeftSide} className={styles["SigninImg"]} alt="name" />
       </div>
       <div className={styles["right-container-signup"]}>
         <div className={styles["Logo-signin"]}>
-          <img src={Logo} className={styles["logoHere"]} />
+          <img src={Logo} className={styles["logoHere"]} alt="name" />
           <span className={styles["logo-name"]}>wavechat</span>
         </div>
         <div className={styles["Headinghere"]}>Hello! Welcome Back!</div>
@@ -127,8 +105,9 @@ const Signup = () => {
         <div className={styles["inputs-div-signup"]}>
           <label>Name</label>
           <div className={styles["inputs-div-here"]}>
-            <img src={emailImg} className={styles["ImgDIv"]} />
+            <img src={NameIcon} className={styles["ImgDIv"]} alt="name" />
             <input
+              ref={inputRef}
               type="text"
               className={styles["inputEmail"]}
               onChange={handleInputName}
@@ -137,7 +116,7 @@ const Signup = () => {
 
           <label>Email</label>
           <div className={styles["inputs-div-here"]}>
-            <img src={emailImg} className={styles["ImgDIv"]} />
+            <img src={emailImg} className={styles["ImgDIv"]} alt="name" />
             <input
               type="email"
               className={styles["inputEmail"]}
@@ -147,34 +126,35 @@ const Signup = () => {
 
           <label>Password</label>
           <div className={styles["inputs-div-here"]}>
-            <img src={passwordImg} className={styles["ImgDIv"]} />
+            <img src={passwordImg} className={styles["ImgDIv"]} alt="name" />
             <input
-              type="password"
+              type={showPass ? "text" : "password"}
               className={styles["inputPassword"]}
               onChange={handleInputPassword}
             />
+            <button
+              type="button"
+              className={styles["buttonShow"]}
+              onClick={toggleShowPassword}
+            >
+              {showPass ? "Hide" : "Show"}
+            </button>
           </div>
           <label>Confirm Password</label>
           <div className={styles["inputs-div-here"]}>
-            <img src={passwordImg} className={styles["ImgDIv"]} />
+            <img src={passwordImg} className={styles["ImgDIv"]} alt="name" />
             <input
-              type="password"
+              type={showPass ? "text" : "password"}
               className={styles["inputConfirmPassword"]}
               onChange={handleInputConfirmPassword}
             />
-          </div>
-          <label>Add Profile Photo</label>
-          <div className={styles["inputs-div-here"]}>
-            <img src={AddImgHere} className={styles["ImgDIv"]} />
-            <label  htmlFor="Signup" style={{cursor:'pointer'}}>Add Your Image Here</label>
-            <input
-            style={{display:'none'}}
-              type="file"
-              className={styles["inputFile"]}
-              onChange={handleInputProfilePhoto} // Use handleInputProfilePhoto for file input
-              accept="image/*"
-              id="Signup"
-            />
+            <button
+              type="button"
+              onClick={toggleConfirmPassword}
+              className={styles["buttonShow"]}
+            >
+              {showConfirmPass ? "Hide" : "Show"}
+            </button>
           </div>
 
           <button
@@ -189,9 +169,9 @@ const Signup = () => {
           -------------------or-------------------
         </div>
         <div className={styles["Img-div"]}>
-          <img src={Insta} className={styles["imgClick"]} />
-          <img src={Gmail} className={styles["imgClick"]} />
-          <img src={Facebook} className={styles["imgClick"]} />
+          <img src={Insta} className={styles["imgClick"]} alt="name" />
+          <img src={Gmail} className={styles["imgClick"]} alt="name" />
+          <img src={Facebook} className={styles["imgClick"]} alt="name" />
         </div>
         <div className={styles["Dont-Sign-up"]}>
           <span>Already Have a Account </span>
@@ -207,7 +187,10 @@ const Signup = () => {
             <div className={styles["ErrorBlock"]}>{errorMsg}</div>
             <button
               className={styles["Close"]}
-              onClick={(e) => {SetError(false); setLoading(false);}}
+              onClick={(e) => {
+                SetError(false);
+                setLoading(false);
+              }}
               // onClick={e=>SetError(false)}
             >
               Close

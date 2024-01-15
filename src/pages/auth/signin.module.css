@@ -81,10 +81,12 @@
   padding-left: 10px;
 }
 .inputs-div-here input {
+  font-family: "Quicksand", sans-serif;
   border: none;
   height: 3vh;
   width: 16vw;
-  font-size: 20px;
+  font-weight: 600;
+  font-size: 16px;
 }
 .inputs-div {
   height: 30vh;
@@ -234,4 +236,12 @@ input[type='checkbox']{
     cursor: pointer;
     height: 34px;
     width: 86px;
+}
+
+.buttonShow{
+  background-color:transparent;
+  border: none;
+  font-family: "Mooli", sans-serif;
+  color: black;
+  cursor: pointer;
 }

@@ -1,0 +1,366 @@
+@import '../../index.scss';
+
+$primary-color: #1f1f1f;
+$secondary-color: #c7c7c7;
+$accent-color: #f26522;
+
+.signin-container {
+  height: 75vh;
+  width: 60vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  border-radius: 30px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  @include tablet{
+    width: 90vw;
+    justify-content: space-evenly;
+  }
+  @include mobile{
+    height: 90vh;
+    // border: 1px solid black;
+    flex-direction: column;
+  }
+}
+
+.signup-container {
+  height: 75vh;
+  width: 60vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  border-radius: 30px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  @include tablet{
+    width: 90vw;
+    justify-content: space-evenly;
+  }
+  @include mobile{
+    height: 90vh;
+    // border: 1px solid black;
+    flex-direction: column;
+  }
+}
+
+.leftContainer {
+  height: 60vh;
+  width: 30vw;
+  @include tablet{
+    // border: 1px solid black;
+    width: 40vw;
+    height: 45vh;
+  }
+  @include mobile{
+    height: 20vh;
+    // border: 1px solid black;
+    flex-direction: column-reverse;
+  }
+}
+
+.right-container,
+.right-container-signup {
+  height: 60vh;
+  width: 30vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  @include tablet{
+    // border: 1px solid black;
+    width: 50vw;
+  }
+  @include mobile{
+    height: 60vh;
+    width: 100%;
+  }
+}
+
+.right-container-signup {
+  height: 70vh;
+}
+
+.SigninImg {
+  width: 100%;
+  height: 100%;
+  border-bottom-left-radius: 30px;
+  border-top-left-radius: 30px;
+}
+
+.Logo-signin {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+
+  .logoHere {
+    height: 6vh;
+    margin-right: 10px;
+  }
+
+  .logo-name {
+    font-family: "Quicksand", sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #55c0b8;
+  }
+}
+
+.Headinghere {
+  font-family: "Mooli", sans-serif;
+  font-size: 26px;
+  font-weight: 600;
+  color: #09607f;
+  margin-bottom: 10px;
+  @include mobile{
+   font-size: 20px;
+  }
+}
+
+.inputs-div-here {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
+    rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+  height: 4vh;
+  width: 18vw;
+  padding-left: 10px;
+  @include tablet{
+    // border: 1px solid;
+    width: calc(100% - 10px);
+  }
+  input {
+    font-family: "Quicksand", sans-serif;
+    border: none;
+    height: 3vh;
+    width: 16vw;
+    font-weight: 600;
+    font-size: 16px;
+    @include tablet{
+      // border: 1px solid;
+      width: calc(100% - 10px);
+    }
+    @include mobile{
+      font-size: 14px;
+    }
+  }
+}
+
+.inputs-div,
+.inputs-div-signup {
+  height: 30vh;
+  width: 20vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  @include tablet{
+    height: 35vh;
+    width: 80%;
+  }
+  @include mobile{
+    height: 35vh;
+    width: 80%;
+   }
+  label {
+    font-family: "Mooli", sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    @include mobile{
+      font-size: 14px;
+
+     }
+     span{
+      font-family: "Mooli", sans-serif;
+      color: red;
+      font-size: 12px;
+      font-weight: 600;
+      @include mobile{
+        font-size: 8px;
+        
+       }
+    }
+  }
+}
+
+.imgClick {
+  height: 3vh;
+  cursor: pointer;
+}
+
+.ImgDIv {
+  height: 3vh;
+  cursor: pointer;
+  margin-right: 10px;
+}
+.pass-icon{
+  padding-top: 3px;
+  padding-right: 5px;
+  height: 2vh;
+  cursor: pointer;
+}
+.Img-div {
+  width: 15vw;
+  height: 4vh;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-bottom: 10px;
+  @include mobile{
+    width: 50%;
+  }
+}
+
+.remember-me-div {
+  width: 18vw;
+  height: 3vh;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 5px;
+  @include mobile{
+    gap: 5px;
+    width: 100%;
+  }
+}
+
+.inputBtn {
+  background-color: #09607f;
+  border: none;
+  color: white;
+  width: 18vw;
+  height: 4vh;
+  font-size: 20px;
+  border-radius: 10px;
+  font-family: "Mooli", sans-serif;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  @include tablet{
+    width: 100%;
+    margin-top: 1vh;
+  }
+  @include mobile{
+    margin-top: 1vh;
+   }
+  &:hover {
+    background-color: white;
+    box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em,
+      rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+    border: none;
+    color: #09607f;
+    width: 18vw;
+    height: 4vh;
+    font-size: 20px;
+    border-radius: 10px;
+    font-family: "Mooli", sans-serif;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    @include tablet{
+      width: 100%;
+      margin-top: 1vh;
+    }
+    @include mobile{
+      margin-top: 1vh;
+     }
+  }
+
+}
+.disabledButton {
+  background-color: black;
+}
+.or-block {
+  color: gray;
+  margin-bottom: 20px;
+}
+
+.Dont-Sign-up {
+  font-family: "Lato", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+
+  span {
+    margin-right: 5px;
+  }
+
+  .Signup-forgot {
+    color: $accent-color;
+    cursor: pointer;
+    text-decoration: underline;
+
+    &:hover {
+      color: darken($accent-color, 10%);
+    }
+  }
+}
+
+input[type='checkbox'] {
+  cursor: pointer;
+  label{
+    @include mobile{
+      font-size: 16px;
+     }
+  }
+}
+
+.inputFile {
+  cursor: pointer;
+}
+
+.PopUpdiv {
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(5px);
+}
+
+.indisePopup {
+  height: 20vh;
+  background-color: white;
+  width: 20vw;
+  border: 3px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 30px;
+  flex-direction: column;
+}
+
+.ErrorBlock {
+  font-size: 20px;
+  font-family: 'Lato', sans-serif;
+  margin-bottom: 10px;
+}
+
+.Close {
+  background-color: #09607f;
+  border: none;
+  color: white;
+  font-size: 20px;
+  border-radius: 10px;
+  font-family: "Mooli", sans-serif;
+  cursor: pointer;
+  height: 34px;
+  width: 86px;
+}
+
+.buttonShow {
+  background-color: transparent;
+  border: none;
+  font-family: "Mooli", sans-serif;
+  color: black;
+  cursor: pointer;
+}

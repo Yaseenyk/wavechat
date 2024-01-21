@@ -1,49 +1,46 @@
-import React, { useContext, useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Cookies from "js-cookie";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { lazy, Suspense, useEffect, useMemo } from 'react';
+
 import "./App.css";
-import Homepage from "./pages/Homepage";
-import Signin from "./pages/auth/Signin";
-import Signup from "./pages/auth/Signup";
-import { AuthContext } from "./context/AuthContext";
+
+const Homepage = lazy(() => import('./pages/Homepage'));
+const Signin = lazy(() => import('./pages/auth/Signin'));
+const Signup = lazy(() => import('./pages/auth/Signup'));
+
+const ProtectedRoute = ({ element }) => {
+  const accessToken = sessionStorage.getItem('accessToken');
+  const refreshToken = sessionStorage.getItem('refreshToken');
+  const hasTokens = accessToken && refreshToken;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!hasTokens) {
+      // Redirect to /signin if tokens are not present
+      navigate('/signin');
+    }
+  }, [hasTokens, navigate]);
+
+  return hasTokens ? element : null;
+};
 
 const App = () => {
-  // const[token,setToken]=useState();
-  //     useEffect(()=>{
-  //       const token = localStorage.getItem("user");
-  //       setToken(token)
-  //     });
-
-  const { currentUser } = useContext(AuthContext);
-
-  const ProtectetdRoute = ({ children }) => {
-    if (!currentUser) {
-      return <Navigate to="/signin" />;
-    }
-    return children;
-  };
+  const homepageElement = useMemo(() => <Homepage />, []);
+  const signinElement = useMemo(() => <Signin />, []);
+  const signupElement = useMemo(() => <Signup />, []);
 
   return (
-    <>
-      <div className="overlay-container"></div>
+    <Suspense fallback={<div>Loading...</div>}>
       <BrowserRouter>
-        <div className="App">
-          <Routes>
-            <Route
-              index
-              element={
-                <ProtectetdRoute>
-                  <Homepage />
-                </ProtectetdRoute>
-              }
-            />
-            <Route path="/signin" element={<Signin />} />
-            <Route path="/signup" element={<Signup />} />
-            {/* token ? <Navigate to="/" /> :  */}
-          </Routes>
-        </div>
+        <Routes>
+          <Route
+            path="/"
+            element={<ProtectedRoute element={homepageElement} />}
+          />
+          <Route path="/signin" element={signinElement} />
+          <Route path="/signup" element={signupElement} />
+        </Routes>
       </BrowserRouter>
-    </>
+    </Suspense>
   );
 };
 

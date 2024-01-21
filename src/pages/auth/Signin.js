@@ -1,8 +1,5 @@
-import React, { useEffect, useState } from "react";
-import styles from "./signin.module.css";
-import app from "../../config/firebase";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import Cookies from "js-cookie";
+import React, { useState, useRef, useEffect } from "react";
+import "./signin.scss";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/Logo.png";
 import LeftSide from "../../assets/SocialMedia.jpg";
@@ -12,101 +9,148 @@ import Gmail from "../../assets/gmail.png";
 import emailImg from "../../assets/emailImg.png";
 import passwordImg from "../../assets/passwordImg.png";
 import LoadingSpinner from "../../helpers/LoadingSpinner/LoadingSpinner";
+import HidePass from "../../assets/HidePass.png";
+import showPassword from "../../assets/ShowPass.png";
+import axios from "axios";
 const Signin = () => {
+  const focusRef = useRef();
+  const [showPass, setShowPass] = useState(false);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const auth = getAuth();
-  const [token, setToken] = useState();
   const [inputData, setInputData] = useState({
     email: "",
     password: "",
   });
+  const [emailError, setemailError] = useState(true);
+  const [isInputTouched, setIsInputTouched] = useState(false);
+  
+  const [passwordsMatch, setPasswordsMatch] = useState(true);
+  useEffect(() => {
+    // Check email validity on component mount
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const isValid = emailRegex.test(inputData.email);
+    setemailError(!isValid);
+  }, [inputData.email, isInputTouched]);
 
+  useEffect(() => {
+    focusRef.current.focus();
+  }, []);
   const handleInputinputEmail = (e) => {
     const email = e.target.value;
     setInputData({ ...inputData, email });
+    setIsInputTouched(true);
   };
 
   const handleInputPassword = (e) => {
     const password = e.target.value;
+    if(password){
+      setPasswordsMatch(false);
+    }
     setInputData({ ...inputData, password });
+
   };
 
   const hanldeInputSubmit = async () => {
     try {
-      setLoading(true)
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        inputData.email,
-        inputData.password
-      );
-      const user = userCredential.user;
-      if(user){
+      setLoading(true);
+
+      const user = await axios.post("http://localhost:300/auth/login", {
+        username: inputData.email,
+        password: inputData.password,
+      });
+      if (user) {
+        const accessToken = user.data.accessToken;
+        const refreshToken = user.data.refreshToken;
+        setSessionToken(accessToken, refreshToken);
+        if (accessToken && refreshToken && user) {
+          navigate("/");
+        }
         setLoading(false);
-        navigate('/')
       }
-      
-    } catch (error) {
-      console.error("Error signing in:", error);
-    }
+    } catch (error) {}
   };
-  const handleSignin = ()=>{
-    navigate('/signup')
-  }
+  const setSessionToken = (accessToken, refreshToken) => {
+    sessionStorage.setItem("accessToken", accessToken);
+    sessionStorage.setItem("refreshToken", refreshToken);
+  };
+  const handleSignin = () => {
+    navigate("/signup");
+  };
+  const toggleShowPassword = (e) => {
+    e.preventDefault();
+    setShowPass((prevState) => !prevState);
+  };
   return (
-    <div className={styles["signin-container"]}>
-      <div className={styles["leftContainer"]}>
-        <img src={LeftSide} className={styles["SigninImg"]} />
+    <div className="signin-container">
+      <div className="leftContainer">
+        <img src={LeftSide} className="SigninImg" alt="signin" />
       </div>
-      <div className={styles["right-container"]}>
-        <div className={styles["Logo-signin"]}>
-          <img src={Logo} className={styles["logoHere"]} />
-          <span className={styles["logo-name"]}>wavechat</span>
+      <div className="right-container">
+        <div className="Logo-signin">
+          <img src={Logo} className="logoHere" alt="signin" />
+          <span className="logo-name">wavechat</span>
         </div>
-        <div className={styles["Headinghere"]}>Hello! Welcome Back!</div>
-        <div className={styles["inputs-div"]}>
-          <label>Email</label>
-          <div className={styles["inputs-div-here"]}>
-            <img src={emailImg} className={styles["ImgDIv"]} />
+        <div className="Headinghere">Hello! Welcome Back!</div>
+        <div className="inputs-div">
+          <label>
+            Email {emailError && isInputTouched && <span>*Invalid Email</span>}
+          </label>
+          <div className="inputs-div-here">
+            <img src={emailImg} className="ImgDIv" alt="signin" />
             <input
+              ref={focusRef}
               type="email"
-              placeholder="|"
-              className={styles["inputEmail"]}
+              placeholder="| Enter your Email here"
+              className="inputEmail"
               onChange={handleInputinputEmail}
             />
           </div>
           <label>Password</label>
-          <div className={styles["inputs-div-here"]}>
-            <img src={passwordImg} className={styles["ImgDIv"]} />
+          <div className="inputs-div-here">
+            <img src={passwordImg} className="ImgDIv" alt="signin" />
             <input
-              placeholder="|"
-              type="password"
-              className={styles["inputPassword"]}
+              placeholder="| Enter your Password here"
+              type={showPass ? "text" : "password"}
+              className="inputPassword"
               onChange={handleInputPassword}
             />
+            <button
+              type="button"
+              className="buttonShow"
+              onClick={toggleShowPassword}
+            >
+              {showPass ? (
+                <img src={showPassword} className="pass-icon" alt="signin" />
+              ) : (
+                <img src={HidePass} className="pass-icon" alt="signin" />
+              )}
+            </button>
           </div>
-          <div className={styles['remember-me-div']}>
-          <input type="checkbox"/>
-          <label>Remember Me</label>
+          <div className="remember-me-div">
+            <input type="checkbox" />
+            <label>Remember Me</label>
           </div>
           <button
-            className={styles["inputBtn"]}
+            className={`inputBtn ${emailError ||passwordsMatch? "disabledButton" : ""}`}
             onClick={hanldeInputSubmit}
-            disabled={loading}
+            disabled={loading || emailError||passwordsMatch}
           >
             {loading ? <LoadingSpinner loading={loading} /> : "Signup"}
           </button>
         </div>
         {/* <hr/> */}
-        <div className={styles["or-block"]}>-------------------or-------------------</div>
-        <div className={styles["Img-div"]}>
-          <img src={Insta} className={styles["imgClick"]} />
-          <img src={Gmail} className={styles["imgClick"]} />
-          <img src={Facebook} className={styles["imgClick"]} />
+        <div className="or-block">-------------------or-------------------</div>
+        <div className="Img-div">
+          <img src={Insta} className="imgClick" alt="signin" />
+          <img src={Gmail} className="imgClick" alt="signin" />
+          <img src={Facebook} className="imgClick" alt="signin" />
         </div>
-        <div className={styles["Dont-Sign-up"]}>
+        <div className="Dont-Sign-up">
           <span>Dont Have a Account</span>
-          <span className={styles['Signup-forgot']} onClick={handleSignin}> Sign up?</span>
+          <span className="Signup-forgot" onClick={handleSignin}>
+            {" "}
+            Sign up?
+          </span>
         </div>
       </div>
     </div>

@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import styles from "./signin.module.css";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import "./signin.scss";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../assets/Logo.png";
 import LeftSide from "../../assets/SocialMedia.jpg";
@@ -11,6 +10,9 @@ import emailImg from "../../assets/emailImg.png";
 import passwordImg from "../../assets/passwordImg.png";
 import NameIcon from "../../assets/NameIcon.png";
 import LoadingSpinner from "../../helpers/LoadingSpinner/LoadingSpinner";
+import HidePass from "../../assets/HidePass.png";
+import showPassword from "../../assets/ShowPass.png";
+import axios from "axios";
 const Signup = () => {
   const inputRef = useRef();
   const [showPass, setShowPass] = useState(false);
@@ -25,17 +27,43 @@ const Signup = () => {
   });
   const [error, SetError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-  const auth = getAuth();
+  const [nameError, setNameError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const [isNameTouched, setIsNameTouched] = useState(false);
+  const [isEmailTouched, setIsEmailTouched] = useState(false);
+  const [passwordsMatch, setPasswordsMatch] = useState(false);
+
   const navigate = useNavigate();
   const handleInputName = (e) => {
     const name = e.target.value;
+    setIsNameTouched(true);
+    if (name.length < 3) {
+      setNameError(true);
+    } else {
+      setNameError(false);
+    }
     setInputData({ ...inputData, name });
   };
-
+  useEffect(() => {
+    // Check email validity on component mount
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const isValid = emailRegex.test(inputData.email);
+    setEmailError(!isValid);
+  }, [inputData.email, isEmailTouched]);
+  useEffect(() => {
+    if(inputData.password && inputData.confirmPassword !==''){
+      inputData.password === inputData.confirmPassword
+      ? setPasswordsMatch(true)
+      : setPasswordsMatch(false);
+    }else{
+      setPasswordsMatch(false)
+    }
+    
+  }, [inputData.password, inputData.confirmPassword]);
   const handleInputinputEmail = (e) => {
     const email = e.target.value;
     setInputData({ ...inputData, email });
+    setIsEmailTouched(true);
   };
 
   const handleInputPassword = (e) => {
@@ -47,33 +75,28 @@ const Signup = () => {
     const confirmPassword = e.target.value;
     setInputData({ ...inputData, confirmPassword });
   };
-  const handleInputProfilePhoto = (e) => {
-    const image = e.target.files[0];
-    setInputData({ ...inputData, image });
-  };
+  // const handleInputProfilePhoto = (e) => {
+  //   const image = e.target.files[0];
+  //   setInputData({ ...inputData, image });
+  // };
   const hanldeInputSubmit = async () => {
+    setLoading(true);
     if (inputData.password === inputData.confirmPassword) {
       try {
         setLoading(true);
-        const response = await createUserWithEmailAndPassword(
-          auth,
-          inputData.email,
-          inputData.password
-        );
-        if (response.status === 200) {
+        const user = await axios.post("http://localhost:300/auth/signup", {
+          username: inputData.email,
+          password: inputData.password,
+        });
+        if (user.status === 200) {
+          setLoading(false);
           navigate("/signin");
         }
       } catch (err) {
-        const { code, message } = err;
-        console.log(code, message);
-
-        if (code == "auth/email-already-in-use") {
-          setErrorMsg("You Have Already logged in go to signin page instead?");
-        }
-        SetError(true);
+        setLoading(false);
+        console.log(err);
       }
     } else {
-      alert("Password Doesnt Matches");
     }
   };
   useEffect(() => {
@@ -91,102 +114,128 @@ const Signup = () => {
     setshowConfirmPass((prevState) => !prevState);
   };
   return (
-    <div className={styles["signup-container"]}>
-      <div className={styles["leftContainer"]}>
-        <img src={LeftSide} className={styles["SigninImg"]} alt="name" />
+    <div className="signup-container">
+      <div className="leftContainer">
+        <img src={LeftSide} className="SigninImg" alt="name" />
       </div>
-      <div className={styles["right-container-signup"]}>
-        <div className={styles["Logo-signin"]}>
-          <img src={Logo} className={styles["logoHere"]} alt="name" />
-          <span className={styles["logo-name"]}>wavechat</span>
+      <div className="right-container-signup">
+        <div className="Logo-signin">
+          <img src={Logo} className="logoHere" alt="name" />
+          <span className="logo-name">wavechat</span>
         </div>
-        <div className={styles["Headinghere"]}>Hello! Welcome Back!</div>
+        <div className="Headinghere">Hello! Welcome Back!</div>
 
-        <div className={styles["inputs-div-signup"]}>
-          <label>Name</label>
-          <div className={styles["inputs-div-here"]}>
-            <img src={NameIcon} className={styles["ImgDIv"]} alt="name" />
+        <div className="inputs-div-signup">
+          <label>
+            Name{" "}
+            {nameError && isNameTouched && (
+              <span>*Name should be at least 3 letters</span>
+            )}
+          </label>
+          <div className="inputs-div-here">
+            <img src={NameIcon} className="ImgDIv" alt="name" />
             <input
               ref={inputRef}
+              placeholder="| Enter your Name here"
               type="text"
-              className={styles["inputEmail"]}
+              className="inputEmail"
               onChange={handleInputName}
             />
           </div>
 
-          <label>Email</label>
-          <div className={styles["inputs-div-here"]}>
-            <img src={emailImg} className={styles["ImgDIv"]} alt="name" />
+          <label>
+            Email
+            {emailError && isEmailTouched && (
+              <span>*Enter a Valid Email</span>
+            )}
+          </label>
+          <div className="inputs-div-here">
+            <img src={emailImg} className="ImgDIv" alt="name" />
             <input
               type="email"
-              className={styles["inputEmail"]}
+              placeholder="| Enter your Email here"
+              className="inputEmail"
               onChange={handleInputinputEmail}
             />
           </div>
 
           <label>Password</label>
-          <div className={styles["inputs-div-here"]}>
-            <img src={passwordImg} className={styles["ImgDIv"]} alt="name" />
+          <div className="inputs-div-here">
+            <img src={passwordImg} className="ImgDIv" alt="name" />
             <input
+              placeholder="| Enter your Password here"
               type={showPass ? "text" : "password"}
-              className={styles["inputPassword"]}
+              className="inputPassword"
               onChange={handleInputPassword}
             />
             <button
               type="button"
-              className={styles["buttonShow"]}
+              className="buttonShow"
               onClick={toggleShowPassword}
             >
-              {showPass ? "Hide" : "Show"}
+              {showPass ? (
+                <img src={showPassword} className="pass-icon" alt="signin" />
+              ) : (
+                <img src={HidePass} className="pass-icon" alt="signin" />
+              )}
             </button>
           </div>
-          <label>Confirm Password</label>
-          <div className={styles["inputs-div-here"]}>
-            <img src={passwordImg} className={styles["ImgDIv"]} alt="name" />
+          <label>
+            Confirm Password{" "}
+            {inputData.password !== inputData.confirmPassword &&
+              inputData.confirmPassword !== "" && (
+                <span>*Password does not match</span>
+              )}
+          </label>
+          <div className="inputs-div-here">
+            <img src={passwordImg} className="ImgDIv" alt="name" />
             <input
-              type={showPass ? "text" : "password"}
-              className={styles["inputConfirmPassword"]}
+              placeholder="| Confirm your here"
+              type={showConfirmPass ? "text" : "password"}
+              className="inputConfirmPassword"
               onChange={handleInputConfirmPassword}
             />
             <button
               type="button"
               onClick={toggleConfirmPassword}
-              className={styles["buttonShow"]}
+              className="buttonShow"
             >
-              {showConfirmPass ? "Hide" : "Show"}
+              {showConfirmPass ? (
+                <img src={showPassword} className="pass-icon" alt="signin" />
+              ) : (
+                <img src={HidePass} className="pass-icon" alt="signin" />
+              )}
             </button>
           </div>
 
           <button
-            className={styles["inputBtn"]}
+            className={`inputBtn ${emailError || nameError || !passwordsMatch ? "disabledButton" : ""}`}
             onClick={hanldeInputSubmit}
-            disabled={loading}
+            disabled={loading || emailError || nameError || !passwordsMatch}
           >
             {loading ? <LoadingSpinner loading={loading} /> : "Signup"}
           </button>
         </div>
-        <div className={styles["or-block"]}>
-          -------------------or-------------------
+        <div className="or-block">-------------------or-------------------</div>
+        <div className="Img-div">
+          <img src={Insta} className="imgClick" alt="name" />
+          <img src={Gmail} className="imgClick" alt="name" />
+          <img src={Facebook} className="imgClick" alt="name" />
         </div>
-        <div className={styles["Img-div"]}>
-          <img src={Insta} className={styles["imgClick"]} alt="name" />
-          <img src={Gmail} className={styles["imgClick"]} alt="name" />
-          <img src={Facebook} className={styles["imgClick"]} alt="name" />
-        </div>
-        <div className={styles["Dont-Sign-up"]}>
+        <div className="Dont-Sign-up">
           <span>Already Have a Account </span>
-          <span className={styles["Signup-forgot"]} onClick={handleSignup}>
+          <span className="Signup-forgot" onClick={handleSignup}>
             {" "}
             Sign in?
           </span>
         </div>
       </div>
       {error && (
-        <div className={styles["PopUpdiv"]}>
-          <div className={styles["indisePopup"]}>
-            <div className={styles["ErrorBlock"]}>{errorMsg}</div>
+        <div className="PopUpdiv">
+          <div className="indisePopup">
+            <div className="ErrorBlock">{errorMsg}</div>
             <button
-              className={styles["Close"]}
+              className="Close"
               onClick={(e) => {
                 SetError(false);
                 setLoading(false);

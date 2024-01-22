@@ -11,6 +11,7 @@ import passwordImg from "../../assets/passwordImg.png";
 import LoadingSpinner from "../../helpers/LoadingSpinner/LoadingSpinner";
 import HidePass from "../../assets/HidePass.png";
 import showPassword from "../../assets/ShowPass.png";
+import { Toaster, toast } from "sonner";
 import axios from "axios";
 const Signin = () => {
   const focusRef = useRef();
@@ -23,7 +24,7 @@ const Signin = () => {
   });
   const [emailError, setemailError] = useState(true);
   const [isInputTouched, setIsInputTouched] = useState(false);
-  
+
   const [passwordsMatch, setPasswordsMatch] = useState(true);
   useEffect(() => {
     // Check email validity on component mount
@@ -43,11 +44,10 @@ const Signin = () => {
 
   const handleInputPassword = (e) => {
     const password = e.target.value;
-    if(password){
+    if (password) {
       setPasswordsMatch(false);
     }
     setInputData({ ...inputData, password });
-
   };
 
   const hanldeInputSubmit = async () => {
@@ -59,15 +59,31 @@ const Signin = () => {
         password: inputData.password,
       });
       if (user) {
+        toast.success(user.data.message);
         const accessToken = user.data.accessToken;
         const refreshToken = user.data.refreshToken;
         setSessionToken(accessToken, refreshToken);
-        if (accessToken && refreshToken && user) {
-          navigate("/");
-        }
-        setLoading(false);
+        setTimeout(()=>{
+          if (accessToken && refreshToken && user) {
+            navigate("/");
+          }
+          setLoading(false);
+        },1000)
+        
       }
-    } catch (error) {}
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+      if (error.isAxiosError) {
+        if (error.response?.data?.status ===401) {
+          toast.error(error.response?.data?.message);
+        } else if (error.code === 'ERR_NETWORK') {
+          toast.error('Failed to connect to the server.');
+        }else {
+          toast.error("Login Failed. Please try again.");
+        }
+      }
+    }
   };
   const setSessionToken = (accessToken, refreshToken) => {
     sessionStorage.setItem("accessToken", accessToken);
@@ -82,6 +98,7 @@ const Signin = () => {
   };
   return (
     <div className="signin-container">
+      <Toaster richColors position="top-center" />
       <div className="leftContainer">
         <img src={LeftSide} className="SigninImg" alt="signin" />
       </div>
@@ -131,11 +148,13 @@ const Signin = () => {
             <label>Remember Me</label>
           </div>
           <button
-            className={`inputBtn ${emailError ||passwordsMatch? "disabledButton" : ""}`}
+            className={`inputBtn ${
+              emailError || passwordsMatch ? "disabledButton" : ""
+            }`}
             onClick={hanldeInputSubmit}
-            disabled={loading || emailError||passwordsMatch}
+            disabled={loading || emailError || passwordsMatch}
           >
-            {loading ? <LoadingSpinner loading={loading} /> : "Signup"}
+            {loading ? <LoadingSpinner loading={loading} /> : "Login"}
           </button>
         </div>
         {/* <hr/> */}

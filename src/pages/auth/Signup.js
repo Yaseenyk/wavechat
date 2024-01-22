@@ -13,6 +13,7 @@ import LoadingSpinner from "../../helpers/LoadingSpinner/LoadingSpinner";
 import HidePass from "../../assets/HidePass.png";
 import showPassword from "../../assets/ShowPass.png";
 import axios from "axios";
+import { Toaster, toast } from "sonner";
 const Signup = () => {
   const inputRef = useRef();
   const [showPass, setShowPass] = useState(false);
@@ -51,14 +52,13 @@ const Signup = () => {
     setEmailError(!isValid);
   }, [inputData.email, isEmailTouched]);
   useEffect(() => {
-    if(inputData.password && inputData.confirmPassword !==''){
+    if (inputData.password && inputData.confirmPassword !== "") {
       inputData.password === inputData.confirmPassword
-      ? setPasswordsMatch(true)
-      : setPasswordsMatch(false);
-    }else{
-      setPasswordsMatch(false)
+        ? setPasswordsMatch(true)
+        : setPasswordsMatch(false);
+    } else {
+      setPasswordsMatch(false);
     }
-    
   }, [inputData.password, inputData.confirmPassword]);
   const handleInputinputEmail = (e) => {
     const email = e.target.value;
@@ -75,10 +75,6 @@ const Signup = () => {
     const confirmPassword = e.target.value;
     setInputData({ ...inputData, confirmPassword });
   };
-  // const handleInputProfilePhoto = (e) => {
-  //   const image = e.target.files[0];
-  //   setInputData({ ...inputData, image });
-  // };
   const hanldeInputSubmit = async () => {
     setLoading(true);
     if (inputData.password === inputData.confirmPassword) {
@@ -89,12 +85,22 @@ const Signup = () => {
           password: inputData.password,
         });
         if (user.status === 200) {
-          setLoading(false);
-          navigate("/signin");
+          toast.success('Signup Successful');
+          setTimeout(()=>{
+            setLoading(false);
+            navigate("/signin");
+          },1000)
+          
+          
         }
       } catch (err) {
         setLoading(false);
-        console.log(err);
+        console.log(err.response);
+        if(err.response.status===409){
+          toast.error(err.response.data.message)
+        }else{
+          toast.error('server error')
+        }
       }
     } else {
     }
@@ -115,6 +121,7 @@ const Signup = () => {
   };
   return (
     <div className="signup-container">
+      <Toaster richColors position="top-center"/>
       <div className="leftContainer">
         <img src={LeftSide} className="SigninImg" alt="name" />
       </div>
@@ -145,9 +152,7 @@ const Signup = () => {
 
           <label>
             Email
-            {emailError && isEmailTouched && (
-              <span>*Enter a Valid Email</span>
-            )}
+            {emailError && isEmailTouched && <span>*Enter a Valid Email</span>}
           </label>
           <div className="inputs-div-here">
             <img src={emailImg} className="ImgDIv" alt="name" />
@@ -209,7 +214,9 @@ const Signup = () => {
           </div>
 
           <button
-            className={`inputBtn ${emailError || nameError || !passwordsMatch ? "disabledButton" : ""}`}
+            className={`inputBtn ${
+              emailError || nameError || !passwordsMatch ? "disabledButton" : ""
+            }`}
             onClick={hanldeInputSubmit}
             disabled={loading || emailError || nameError || !passwordsMatch}
           >

@@ -80,9 +80,10 @@ const Signup = () => {
     if (inputData.password === inputData.confirmPassword) {
       try {
         setLoading(true);
-        const user = await axios.post("http://localhost:300/auth/signup", {
+        const user = await axios.post("https://esports-backend-v1gj.onrender.com/auth/signup", {
           username: inputData.email,
           password: inputData.password,
+          name:inputData.name
         });
         if (user.status === 200) {
           toast.success('Signup Successful');

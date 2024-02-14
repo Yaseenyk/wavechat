@@ -54,7 +54,7 @@ const Signin = () => {
     try {
       setLoading(true);
 
-      const user = await axios.post("http://localhost:300/auth/login", {
+      const user = await axios.post("https://esports-backend-v1gj.onrender.com/auth/login", {
         username: inputData.email,
         password: inputData.password,
       });

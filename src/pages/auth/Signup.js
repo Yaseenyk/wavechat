@@ -26,7 +26,6 @@ const Signup = () => {
     confirmPassword: "",
     image: "",
   });
-  const [error, SetError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [nameError, setNameError] = useState(false);
   const [emailError, setEmailError] = useState(false);
@@ -238,23 +237,6 @@ const Signup = () => {
           </span>
         </div>
       </div>
-      {error && (
-        <div className="PopUpdiv">
-          <div className="indisePopup">
-            <div className="ErrorBlock">{errorMsg}</div>
-            <button
-              className="Close"
-              onClick={(e) => {
-                SetError(false);
-                setLoading(false);
-              }}
-              // onClick={e=>SetError(false)}
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
